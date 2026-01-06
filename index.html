@@ -29,7 +29,8 @@
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
             padding: 1rem 5%;
-            display: justify;
+            /* FIXED: Changed from 'justify' (invalid) to 'flex' */
+            display: flex; 
             justify-content: space-between;
             align-items: center;
             position: sticky; top: 0; z-index: 1000;
@@ -102,17 +103,23 @@
         .social-icons a:hover { background: var(--accent); color: #000; transform: translateY(-5px); }
         .map-wrapper { height: 180px; border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); }
 
-        /* --- MOBILE RESPONSIVENESS --- */
+        /* --- MOBILE RESPONSIVENESS UPDATED --- */
         @media (max-width: 850px) {
             .weather-hero { grid-template-columns: 1fr; }
             .menu-toggle { display: block; }
             
+            /* FIXED: Position nav absolute so it doesn't push the toggle to the middle */
+            nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+            }
+
             nav ul {
                 display: none; /* Hidden by default */
                 flex-direction: column;
-                position: absolute;
-                top: 100%; left: 0; width: 100%;
-                background: rgba(0, 0, 0, 0.9);
+                background: rgba(0, 0, 0, 0.95);
                 padding: 20px;
                 gap: 15px;
                 text-align: center;
@@ -202,7 +209,7 @@
             document.getElementById('navLinks').classList.toggle('active');
         }
 
-        // Improved Reverse Geocoding to prevent "Unknown Location"
+        // Improved Reverse Geocoding
         async function getCityName(lat, lon) {
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
@@ -214,6 +221,7 @@
 
         async function fetchWeather(lat, lon, name) {
             document.getElementById('cityName').innerText = name;
+            // Note: Google Maps embed requires an API key for production. Using basic embed structure here.
             document.getElementById('mapFrame').src = `https://maps.google.com/maps?q=${lat},${lon}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
 
             try {
